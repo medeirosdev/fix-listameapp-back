@@ -1,35 +1,34 @@
-// import { startOfHour, parseISO, isEqual } from 'date-fns';
+import { format, parseISO } from 'date-fns';
+import { getCustomRepository } from 'typeorm';
 
 import Appointment from '../models/Appointment';
 import AppointmentRepository from '../repositories/AppointmentsRepository';
 
 interface Request {
   userId: string;
+  groupId: string;
   startDate: Date;
   endDate: Date;
   appointmentName: string;
   appointmentDescription: string;
   location: string;
+  isPrivate: boolean;
 }
 
 class CreateAppointmentService {
-  private appointmentsRepository: AppointmentRepository;
-
-  constructor(appointmentsRepository: AppointmentRepository) {
-    this.appointmentsRepository = appointmentsRepository;
-  }
-
-  public execute({
+  public async execute({
     userId,
+    groupId,
     startDate,
     endDate,
     appointmentName,
     appointmentDescription,
     location,
-  }: Request): Appointment {
+    isPrivate,
+  }: Request): Promise<Appointment> {
     // const appointmentDate = startOfHour(startDate);
 
-    // const hasAppointmentInSameDate = this.appointmentsRepository.findByDate(
+    // const hasAppointmentInSameDate = appointmentsRepository.findByDate(
     //   appointmentDate,
     // );
 
@@ -37,14 +36,20 @@ class CreateAppointmentService {
     //   throw Error('This appointment is already booked');
     // }
 
-    const appointment = this.appointmentsRepository.create({
-      userId,
-      startDate,
-      endDate,
-      appointmentName,
-      appointmentDescription,
+    const appointmentsRepository = getCustomRepository(AppointmentRepository);
+
+    const appointment = appointmentsRepository.create({
+      user_id: userId,
+      group_id: groupId,
+      start_date: startDate,
+      end_date: endDate,
+      appointment_name: appointmentName,
+      appointment_description: appointmentDescription,
       location,
+      is_private: isPrivate,
     });
+
+    await appointmentsRepository.save(appointment);
 
     return appointment;
   }

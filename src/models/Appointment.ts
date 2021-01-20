@@ -1,37 +1,54 @@
-import { uuid } from 'uuidv4';
-import { Entity } from 'typeorm';
+/* eslint-disable camelcase */
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 
+import User from './User';
+
+@Entity('appointments')
 class Appointment {
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  userId: string;
+  @Column()
+  user_id: string;
 
-  startDate: Date;
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'user_id' })
+  user: User;
 
-  endDate: Date;
+  @Column()
+  group_id: string;
 
-  appointmentName: string;
+  @Column('time with time zone')
+  start_date: Date;
 
-  appointmentDescription: string;
+  @Column('time with time zone')
+  end_date: Date;
 
+  @Column()
+  appointment_name: string;
+
+  @Column()
+  appointment_description: string;
+
+  @Column()
   location: string;
 
-  constructor({
-    userId,
-    startDate,
-    endDate,
-    appointmentName,
-    appointmentDescription,
-    location,
-  }: Omit<Appointment, 'id'>) {
-    this.id = uuid();
-    this.userId = userId;
-    this.startDate = startDate;
-    this.endDate = endDate;
-    this.appointmentName = appointmentName;
-    this.appointmentDescription = appointmentDescription;
-    this.location = location;
-  }
+  @Column('bool')
+  is_private: boolean;
+
+  @CreateDateColumn()
+  created_at: Date;
+
+  @UpdateDateColumn()
+  updated_at: Date;
 }
 
 export default Appointment;
