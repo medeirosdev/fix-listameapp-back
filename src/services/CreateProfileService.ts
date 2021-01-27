@@ -3,25 +3,23 @@ import { getRepository } from 'typeorm';
 import Profile from '../models/Profile';
 
 interface Request {
-  id: string;
-  login: string;
+  userId: string;
 }
 
 class CreateProfileService {
-  public async execute({ id, login }: Request): Promise<Profile> {
+  public async execute({ userId }: Request): Promise<Profile> {
     const profilesRepository = getRepository(Profile);
 
-    const loginExists = await profilesRepository.findOne({
-      where: { login },
+    const profileExists = await profilesRepository.findOne({
+      where: { user_id: { userId } },
     });
 
-    if (loginExists) {
-      throw new Error('Login already used');
+    if (profileExists) {
+      throw new Error('User profile already exists');
     }
 
     const profile = profilesRepository.create({
-      user_id: id,
-      login,
+      user_id: userId,
     });
 
     await profilesRepository.save(profile);

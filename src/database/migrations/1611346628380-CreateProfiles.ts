@@ -26,7 +26,7 @@ export default class CreateProfiles1611346628380 implements MigrationInterface {
           {
             name: 'login',
             type: 'varchar',
-            isUnique: true,
+            isNullable: true,
           },
           {
             name: 'bio',

@@ -8,7 +8,6 @@ interface Request {
   name: string;
   surname: string;
   email: string;
-  login: string;
   password: string;
 }
 
@@ -18,7 +17,6 @@ class CreateUserService {
     surname,
     email,
     password,
-    login,
   }: Request): Promise<User> {
     const usersRepository = getRepository(User);
 
@@ -46,8 +44,7 @@ class CreateUserService {
     const createProfile = new CreateProfileService();
 
     await createProfile.execute({
-      id: user.id,
-      login,
+      userId: user.id,
     });
 
     return user;
