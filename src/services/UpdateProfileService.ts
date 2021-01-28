@@ -1,33 +1,42 @@
+/* eslint-disable camelcase */
 import { getRepository } from 'typeorm';
 
 import Profile from '../models/Profile';
 
 interface Request {
-  id: string;
+  user_id: string;
   login: string;
-  avatar: string;
   bio: string;
 }
 
 class UpdateProfileService {
-  public async execute({ id, login, bio, avatar }: Request): Promise<Profile> {
+  public async execute({ user_id, login, bio }: Request): Promise<Profile> {
     const profilesRepository = getRepository(Profile);
 
-    const profile = await profilesRepository.findByIds([id]);
-
-    if (!profile || (Array.isArray(profile) && profile.length === 0)) {
-      throw new Error('User does not exist');
-    }
-
-    const loginExists = await profilesRepository.findOne({
-      where: { login },
+    const profile = await profilesRepository.findOne({
+      where: { user_id },
     });
 
-    if (loginExists) {
-      throw new Error('Login already used');
+    if (!profile) {
+      throw new Error('Profile does not exist');
     }
 
-    return profile[0];
+    if (login) {
+      const loginExists = await profilesRepository.findOne({
+        where: { login },
+      });
+
+      if (loginExists) {
+        throw new Error('Login already used');
+      }
+    }
+
+    if (login) profile.login = login;
+    if (bio) profile.bio = bio;
+
+    await profilesRepository.save(profile);
+
+    return profile;
   }
 }
 
