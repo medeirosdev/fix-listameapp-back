@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 import { getRepository } from 'typeorm';
 
+import AppError from '../errors/AppError';
 import Profile from '../models/Profile';
 
 interface Request {
@@ -18,7 +19,7 @@ class UpdateProfileService {
     });
 
     if (!profile) {
-      throw new Error('Profile does not exist');
+      throw new AppError('Profile does not exist');
     }
 
     if (login) {
@@ -27,7 +28,7 @@ class UpdateProfileService {
       });
 
       if (loginExists) {
-        throw new Error('Login already used');
+        throw new AppError('Login already used');
       }
     }
 

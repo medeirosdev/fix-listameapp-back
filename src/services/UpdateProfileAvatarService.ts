@@ -4,7 +4,7 @@ import fs from 'fs';
 import { getRepository } from 'typeorm';
 
 import uploadConfig from '../config/upload';
-
+import AppError from '../errors/AppError';
 import Profile from '../models/Profile';
 
 interface Request {
@@ -21,7 +21,7 @@ class UpdateProfileAvatarService {
     });
 
     if (!profile) {
-      throw new Error('Profile does not exist');
+      throw new AppError('Profile does not exist');
     }
 
     if (profile.avatar) {

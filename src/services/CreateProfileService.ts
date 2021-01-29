@@ -1,5 +1,6 @@
 import { getRepository } from 'typeorm';
 
+import AppError from '../errors/AppError';
 import Profile from '../models/Profile';
 
 interface Request {
@@ -15,7 +16,7 @@ class CreateProfileService {
     });
 
     if (profileExists) {
-      throw new Error('User profile already exists');
+      throw new AppError('User profile already exists');
     }
 
     const profile = profilesRepository.create({
