@@ -1,9 +1,10 @@
-import { getRepository } from 'typeorm';
 import { hash } from 'bcryptjs';
+import { injectable, inject, container } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
 import User from '@modules/users/infra/typeorm/entities/User';
 import CreateProfileService from '@modules/profiles/services/CreateProfileService';
+import IUsersRepository from '../repositories/IUsersRepository';
 
 interface Request {
   name: string;
@@ -12,18 +13,20 @@ interface Request {
   password: string;
 }
 
+@injectable()
 class CreateUserService {
+  constructor(
+    @inject('UsersRepository')
+    private usersRepository: IUsersRepository,
+  ) {}
+
   public async execute({
     name,
     surname,
     email,
     password,
   }: Request): Promise<User> {
-    const usersRepository = getRepository(User);
-
-    const userExists = await usersRepository.findOne({
-      where: { email },
-    });
+    const userExists = await this.usersRepository.findByEmail(email);
 
     if (userExists) {
       throw new AppError('Email address already used');
@@ -31,7 +34,7 @@ class CreateUserService {
 
     const hashedPassword = await hash(password, 8);
 
-    const user = usersRepository.create({
+    const user = await this.usersRepository.create({
       name,
       surname,
       email,
@@ -40,9 +43,9 @@ class CreateUserService {
       type: 'DEFAULT',
     });
 
-    await usersRepository.save(user);
+    await this.usersRepository.save(user);
 
-    const createProfile = new CreateProfileService();
+    const createProfile = container.resolve(CreateProfileService);
 
     await createProfile.execute({
       userId: user.id,

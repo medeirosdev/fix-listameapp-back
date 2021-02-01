@@ -1,8 +1,8 @@
 // import { format, parseISO } from 'date-fns';
-import { getCustomRepository } from 'typeorm';
+import { injectable, inject } from 'tsyringe';
 
 import Appointment from '@modules/appointments/infra/typeorm/entities/Appointment';
-import AppointmentRepository from '@modules/appointments/repositories/AppointmentsRepository';
+import IAppointmentsRepository from '../repositories/IAppointmentsRepository';
 
 interface Request {
   userId: string;
@@ -15,7 +15,13 @@ interface Request {
   isPrivate: boolean;
 }
 
+@injectable()
 class CreateAppointmentService {
+  constructor(
+    @inject('AppointmentsRepository')
+    private appointmentsRepository: IAppointmentsRepository,
+  ) {}
+
   public async execute({
     userId,
     groupId,
@@ -36,20 +42,16 @@ class CreateAppointmentService {
     //   throw Error('This appointment is already booked');
     // }
 
-    const appointmentsRepository = getCustomRepository(AppointmentRepository);
-
-    const appointment = appointmentsRepository.create({
-      user_id: userId,
-      group_id: groupId,
-      start_date: startDate,
-      end_date: endDate,
-      appointment_name: appointmentName,
-      appointment_description: appointmentDescription,
+    const appointment = await this.appointmentsRepository.create({
+      userId,
+      groupId,
+      startDate,
+      endDate,
+      appointmentName,
+      appointmentDescription,
       location,
-      is_private: isPrivate,
+      isPrivate,
     });
-
-    await appointmentsRepository.save(appointment);
 
     return appointment;
   }

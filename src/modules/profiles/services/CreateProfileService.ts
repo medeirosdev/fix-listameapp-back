@@ -1,29 +1,32 @@
-import { getRepository } from 'typeorm';
+import { injectable, inject } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
 import Profile from '@modules/profiles/infra/typeorm/entities/Profile';
+import IProfilesRepository from '../repositories/IProfilesRepository';
 
 interface Request {
   userId: string;
 }
 
+@injectable()
 class CreateProfileService {
-  public async execute({ userId }: Request): Promise<Profile> {
-    const profilesRepository = getRepository(Profile);
+  constructor(
+    @inject('ProfilesRepository')
+    private profilesRepository: IProfilesRepository,
+  ) {}
 
-    const profileExists = await profilesRepository.findOne({
-      where: { user_id: { userId } },
-    });
+  public async execute({ userId }: Request): Promise<Profile> {
+    const profileExists = await this.profilesRepository.findByUserId(userId);
 
     if (profileExists) {
       throw new AppError('User profile already exists');
     }
 
-    const profile = profilesRepository.create({
-      user_id: userId,
+    const profile = await this.profilesRepository.create({
+      userId,
     });
 
-    await profilesRepository.save(profile);
+    await this.profilesRepository.save(profile);
 
     return profile;
   }
