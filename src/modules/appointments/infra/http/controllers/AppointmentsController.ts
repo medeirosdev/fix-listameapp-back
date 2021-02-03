@@ -12,6 +12,7 @@ export default class AppointmentsController {
       endDate,
       appointmentName,
       appointmentDescription,
+      status,
       location,
       isPrivate,
     } = req.body;
@@ -30,6 +31,7 @@ export default class AppointmentsController {
       endDate: parsedEndDate,
       appointmentName,
       appointmentDescription,
+      status,
       location,
       isPrivate,
     });

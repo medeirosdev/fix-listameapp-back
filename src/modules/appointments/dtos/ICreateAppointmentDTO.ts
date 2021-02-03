@@ -5,6 +5,7 @@ export default interface ICreateAppointmentDTO {
   endDate: Date;
   appointmentName: string;
   appointmentDescription: string;
+  status: string;
   location: string;
   isPrivate: boolean;
 }

@@ -39,6 +39,9 @@ class Appointment {
   appointment_description: string;
 
   @Column()
+  status: string;
+
+  @Column()
   location: string;
 
   @Column('bool')

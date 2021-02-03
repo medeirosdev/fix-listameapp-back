@@ -11,6 +11,7 @@ interface Request {
   endDate: Date;
   appointmentName: string;
   appointmentDescription: string;
+  status: string;
   location: string;
   isPrivate: boolean;
 }
@@ -29,6 +30,7 @@ class CreateAppointmentService {
     endDate,
     appointmentName,
     appointmentDescription,
+    status,
     location,
     isPrivate,
   }: Request): Promise<Appointment> {
@@ -49,6 +51,7 @@ class CreateAppointmentService {
       endDate,
       appointmentName,
       appointmentDescription,
+      status,
       location,
       isPrivate,
     });

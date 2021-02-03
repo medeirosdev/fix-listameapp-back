@@ -26,6 +26,7 @@ class AppointmentsRepository implements IAppointmentsRepository {
     endDate,
     appointmentName,
     appointmentDescription,
+    status,
     location,
     isPrivate,
   }: ICreateAppointmentDTO): Promise<Appointment> {
@@ -36,6 +37,7 @@ class AppointmentsRepository implements IAppointmentsRepository {
       end_date: endDate,
       appointment_name: appointmentName,
       appointment_description: appointmentDescription,
+      status,
       location,
       is_private: isPrivate,
     });
