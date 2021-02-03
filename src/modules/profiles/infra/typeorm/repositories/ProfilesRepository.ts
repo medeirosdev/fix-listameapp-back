@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { getRepository, Repository } from 'typeorm';
 
 import IProfilesRepository from '@modules/profiles/repositories/IProfilesRepository';
@@ -12,7 +13,9 @@ class ProfilesRepository implements IProfilesRepository {
   }
 
   public async findByUserId(userId: string): Promise<Profile | undefined> {
-    const user = await this.ormRepository.findOne({ where: { userId } });
+    const user = await this.ormRepository.findOne({
+      where: { user_id: userId },
+    });
 
     return user;
   }
