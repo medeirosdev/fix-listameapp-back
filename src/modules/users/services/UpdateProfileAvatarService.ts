@@ -1,13 +1,10 @@
 /* eslint-disable camelcase */
-import path from 'path';
-import fs from 'fs';
 import { injectable, inject } from 'tsyringe';
 
-import uploadConfig from '@config/upload';
 import AppError from '@shared/errors/AppError';
-import Profile from '@modules/profiles/infra/typeorm/entities/Profile';
+import User from '@modules/users/infra/typeorm/entities/User';
 import IStorageProvider from '@shared/container/providers/StorageProvider/models/IStorageProvider';
-import IProfilesRepository from '../repositories/IProfilesRepository';
+import IUsersRepository from '../repositories/IUsersRepository';
 
 interface Request {
   user_id: string;
@@ -17,18 +14,18 @@ interface Request {
 @injectable()
 class UpdateProfileAvatarService {
   constructor(
-    @inject('ProfilesRepository')
-    private profilesRepository: IProfilesRepository,
+    @inject('UsersRepository')
+    private usersRepository: IUsersRepository,
 
     @inject('StorageProvider')
     private storageProvider: IStorageProvider,
   ) {}
 
-  public async execute({ user_id, avatarFileName }: Request): Promise<Profile> {
-    const profile = await this.profilesRepository.findByUserId(user_id);
+  public async execute({ user_id, avatarFileName }: Request): Promise<User> {
+    const profile = await this.usersRepository.findById(user_id);
 
     if (!profile) {
-      throw new AppError('Profile does not exist');
+      throw new AppError('User does not exist');
     }
 
     if (profile.avatar) {
@@ -39,7 +36,7 @@ class UpdateProfileAvatarService {
 
     profile.avatar = fileName;
 
-    await this.profilesRepository.save(profile);
+    await this.usersRepository.save(profile);
 
     return profile;
   }

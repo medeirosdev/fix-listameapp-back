@@ -1,8 +1,7 @@
-import { injectable, inject, container } from 'tsyringe';
+import { injectable, inject } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
 import User from '@modules/users/infra/typeorm/entities/User';
-import CreateProfileService from '@modules/profiles/services/CreateProfileService';
 import IUsersRepository from '../repositories/IUsersRepository';
 import IHashProvider from '../providers/HashProvider/models/IHashProvider';
 
@@ -47,12 +46,6 @@ class CreateUserService {
     });
 
     await this.usersRepository.save(user);
-
-    const createProfile = container.resolve(CreateProfileService);
-
-    await createProfile.execute({
-      userId: user.id,
-    });
 
     return user;
   }

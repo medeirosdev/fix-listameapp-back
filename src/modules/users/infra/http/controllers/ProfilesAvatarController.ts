@@ -1,11 +1,12 @@
+/* eslint-disable camelcase */
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
-import UpdateProfileAvatarService from '@modules/profiles/services/UpdateProfileAvatarService';
+import UpdateProfileAvatarService from '@modules/users/services/UpdateProfileAvatarService';
 
 export default class ProfilesAvatarController {
   public async update(req: Request, res: Response): Promise<Response> {
-    const { id: user_id } = req.user;
+    const user_id = req.user.id;
 
     const updateProfileAvatar = container.resolve(UpdateProfileAvatarService);
 

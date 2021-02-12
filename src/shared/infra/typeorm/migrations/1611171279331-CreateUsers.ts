@@ -27,6 +27,21 @@ export default class CreateUsers1611171279331 implements MigrationInterface {
             isUnique: true,
           },
           {
+            name: 'login',
+            type: 'varchar',
+            isNullable: true,
+          },
+          {
+            name: 'bio',
+            type: 'varchar',
+            isNullable: true,
+          },
+          {
+            name: 'avatar',
+            type: 'varchar',
+            isNullable: true,
+          },
+          {
             name: 'password',
             type: 'varchar',
           },

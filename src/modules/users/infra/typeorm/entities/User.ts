@@ -22,6 +22,15 @@ class User {
   email: string;
 
   @Column()
+  login: string;
+
+  @Column()
+  bio: string;
+
+  @Column()
+  avatar: string;
+
+  @Column()
   password: string;
 
   @Column()

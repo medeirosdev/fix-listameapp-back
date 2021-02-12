@@ -1,11 +1,10 @@
-/* eslint-disable camelcase */
 import { Router } from 'express';
 import multer from 'multer';
 
 import uploadConfig from '@config/upload';
 
-import ensureAuthenticated from '@modules/users/infra/http/middlewares/ensureAuthenticated';
 import ProfilesController from '../controllers/ProfilesController';
+import ensureAuthenticated from '../middlewares/ensureAuthenticated';
 import ProfilesAvatarController from '../controllers/ProfilesAvatarController';
 
 const profilesRouter = Router();
@@ -21,6 +20,8 @@ profilesRouter.patch(
   profilesAvatarController.update,
 );
 
-profilesRouter.patch('/', upload.single('avatar'), profilesController.update);
+profilesRouter.put('/', profilesController.update);
+
+profilesRouter.get('/', profilesController.show);
 
 export default profilesRouter;
