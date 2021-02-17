@@ -1,7 +1,9 @@
+/* eslint-disable camelcase */
 import { getRepository, Repository } from 'typeorm';
 
 import IAppointmentsRepository from '@modules/appointments/repositories/IAppointmentsRepository';
 import ICreateAppointmentDTO from '@modules/appointments/dtos/ICreateAppointmentDTO';
+import IListProfileAppointmentsDTO from '@modules/appointments/dtos/IListProfileAppointmentsDTO';
 import Appointment from '@modules/appointments/infra/typeorm/entities/Appointment';
 
 class AppointmentsRepository implements IAppointmentsRepository {
@@ -17,6 +19,38 @@ class AppointmentsRepository implements IAppointmentsRepository {
     });
 
     return hasAppointment;
+  }
+
+  public async findByUserId({
+    userId,
+    groupId,
+    startDate,
+    endDate,
+    appointmentName,
+    appointmentDescription,
+    status,
+    location,
+    isPrivate,
+  }: IListProfileAppointmentsDTO): Promise<Appointment[] | undefined> {
+    const where = {
+      user_id: userId,
+    };
+
+    if (groupId) where.group_id = groupId;
+    if (startDate) where.start_date = startDate;
+    if (endDate) where.end_date = endDate;
+    if (appointmentName) where.appointment_name = appointmentName;
+    if (appointmentDescription)
+      where.appointment_description = appointmentDescription;
+    if (status) where.status = status;
+    if (location) where.location = location;
+    if (isPrivate) where.is_private = isPrivate;
+
+    const hasAppointments = await this.ormRepository.find({
+      where,
+    });
+
+    return hasAppointments;
   }
 
   public async create({
