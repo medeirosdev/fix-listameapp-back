@@ -1,11 +1,10 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-export default class CreateAppointments1610649037159
-  implements MigrationInterface {
+export default class CreateUsers1616617063131 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'appointments',
+        name: 'users',
         columns: [
           {
             name: 'id',
@@ -15,40 +14,40 @@ export default class CreateAppointments1610649037159
             default: 'uuid_generate_v4()',
           },
           {
-            name: 'user_id',
-            type: 'uuid',
-            isNullable: true,
-          },
-          {
-            name: 'group_id',
-            type: 'uuid',
-            isNullable: true,
-          },
-          {
-            name: 'start_date',
-            type: 'timestamp with time zone',
-          },
-          {
-            name: 'end_date',
-            type: 'timestamp with time zone',
-          },
-          {
-            name: 'appointment_name',
+            name: 'name',
             type: 'varchar',
           },
           {
-            name: 'appointment_description',
+            name: 'email',
+            type: 'varchar',
+            isUnique: true,
+          },
+          {
+            name: 'login',
+            type: 'varchar',
+            isUnique: true,
+          },
+          {
+            name: 'bio',
             type: 'varchar',
             isNullable: true,
           },
           {
-            name: 'location',
+            name: 'avatar',
             type: 'varchar',
             isNullable: true,
           },
           {
-            name: 'is_private',
-            type: 'boolean',
+            name: 'password',
+            type: 'varchar',
+          },
+          {
+            name: 'status',
+            type: 'varchar',
+          },
+          {
+            name: 'type',
+            type: 'varchar',
           },
           {
             name: 'created_at',
@@ -66,6 +65,6 @@ export default class CreateAppointments1610649037159
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('appointments');
+    await queryRunner.dropTable('users');
   }
 }

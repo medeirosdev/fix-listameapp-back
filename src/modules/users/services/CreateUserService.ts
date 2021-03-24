@@ -7,8 +7,8 @@ import IHashProvider from '../providers/HashProvider/models/IHashProvider';
 
 interface Request {
   name: string;
-  surname: string;
   email: string;
+  login: string;
   password: string;
 }
 
@@ -24,22 +24,28 @@ class CreateUserService {
 
   public async execute({
     name,
-    surname,
     email,
+    login,
     password,
   }: Request): Promise<User> {
-    const userExists = await this.usersRepository.findByEmail(email);
+    const emailExists = await this.usersRepository.findByEmail(email);
 
-    if (userExists) {
-      throw new AppError('Email address already used');
+    if (emailExists) throw new AppError('Email address already used');
+
+    const loginExists = await this.usersRepository.findByLogin(login);
+
+    if (loginExists) throw new AppError('Login already used');
+
+    if (password.length < 8) {
+      throw new AppError('Password needs at least 8 characters');
     }
 
     const hashedPassword = await this.hashProvider.generateHash(password);
 
     const user = await this.usersRepository.create({
       name,
-      surname,
       email,
+      login,
       password: hashedPassword,
       status: 'ACTIVE',
       type: 'DEFAULT',

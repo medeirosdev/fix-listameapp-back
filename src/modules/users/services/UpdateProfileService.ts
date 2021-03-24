@@ -9,7 +9,6 @@ import IHashProvider from '../providers/HashProvider/models/IHashProvider';
 interface Request {
   user_id: string;
   name: string;
-  surname: string;
   email: string;
   login: string;
   bio: string;
@@ -30,7 +29,6 @@ class UpdateProfileService {
   public async execute({
     user_id,
     name,
-    surname,
     email,
     login,
     bio,
@@ -75,7 +73,6 @@ class UpdateProfileService {
     }
 
     user.name = name;
-    user.surname = surname;
     user.email = email;
     user.login = login;
     user.bio = bio;
