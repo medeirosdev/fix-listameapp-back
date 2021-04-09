@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
+import { classToClass } from 'class-transformer';
 
 import UpdateProfileAvatarService from '@modules/users/services/UpdateProfileAvatarService';
 
@@ -15,6 +16,6 @@ export default class ProfilesAvatarController {
       avatarFileName: req.file.filename,
     });
 
-    return res.json(profile);
+    return res.json(classToClass(profile));
   }
 }
