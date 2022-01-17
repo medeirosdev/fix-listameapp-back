@@ -9,7 +9,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 
-import User from '@modules/users/infra/typeorm/entities/User';
+import Agenda from '@modules/agendas/infra/typeorm/entities/Agenda';
 
 @Entity('appointments')
 class Appointment {
@@ -17,14 +17,11 @@ class Appointment {
   id: string;
 
   @Column()
-  user_id: string;
+  agenda_id: string;
 
-  @ManyToOne(() => User)
-  @JoinColumn({ name: 'user_id' })
-  user: User;
-
-  @Column()
-  group_id: string;
+  @ManyToOne(() => Agenda)
+  @JoinColumn({ name: 'agenda_id' })
+  user: Agenda;
 
   @Column('time with time zone')
   start_date: Date;
@@ -37,6 +34,12 @@ class Appointment {
 
   @Column()
   appointment_description: string;
+
+  @Column()
+  reccurent_id: string;
+
+  @Column()
+  notify_before: number;
 
   @Column()
   status: string;

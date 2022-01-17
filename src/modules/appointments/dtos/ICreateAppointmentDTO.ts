@@ -1,11 +1,12 @@
 export default interface ICreateAppointmentDTO {
-  userId: string;
-  groupId: string;
+  agendaId: string;
   startDate: Date;
-  endDate: Date;
+  endDate?: Date;
   appointmentName: string;
-  appointmentDescription: string;
+  appointmentDescription?: string;
+  notifyBefore?: number;
+  reccurence?: string;
   status: string;
-  location: string;
+  location?: string;
   isPrivate: boolean;
 }

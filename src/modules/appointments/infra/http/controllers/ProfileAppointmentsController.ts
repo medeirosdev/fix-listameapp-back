@@ -1,17 +1,10 @@
 import { Request, Response } from 'express';
-import {
-  parseISO,
-  isSameDay,
-  format,
-  isEqual,
-  isToday,
-  isYesterday,
-  isTomorrow,
-} from 'date-fns';
+import { isSameDay } from 'date-fns';
 import { container } from 'tsyringe';
 
 import ListProfileAppointmentsService from '@modules/appointments/services/ListProfileAppointmentsService';
 import Appointment from '@modules/appointments/infra/typeorm/entities/Appointment';
+import IListProfileAppointmentsDTO from '@modules/appointments/dtos/IListProfileAppointmentsDTO';
 
 interface GroupedAppointment {
   date: string | Date;
@@ -51,9 +44,8 @@ const groupByDate = (appointments: Appointment[]) => {
 export default class ProfileAppointmentsController {
   public async index(req: Request, res: Response): Promise<Response> {
     const userId = req.user.id;
-
     const {
-      groupId,
+      agendaId,
       startDate,
       endDate,
       appointmentName,
@@ -63,25 +55,24 @@ export default class ProfileAppointmentsController {
       isPrivate,
     } = req.query;
 
+    const data = {
+      userId,
+      agendaId,
+      startDate,
+      endDate,
+      appointmentName,
+      appointmentDescription,
+      status,
+      location,
+      isPrivate,
+    } as IListProfileAppointmentsDTO;
+
     const listProfileAppointmentsService = container.resolve(
       ListProfileAppointmentsService,
     );
 
-    const parsedStartDate = startDate ? parseISO(startDate) : undefined;
-    const parsedEndDate = endDate ? parseISO(endDate) : undefined;
-
     const appointments: Appointment[] = await listProfileAppointmentsService.execute(
-      {
-        userId,
-        groupId,
-        startDate: parsedStartDate,
-        endDate: parsedEndDate,
-        appointmentName,
-        appointmentDescription,
-        status,
-        location,
-        isPrivate: isPrivate === 'true',
-      },
+      data,
     );
 
     return res.json(groupByDate(appointments));

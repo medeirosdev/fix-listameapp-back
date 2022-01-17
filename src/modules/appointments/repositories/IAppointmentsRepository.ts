@@ -4,8 +4,8 @@ import IListProfileAppointmentsDTO from '../dtos/IListProfileAppointmentsDTO';
 
 export default interface IAppointmentsRepository {
   create(data: ICreateAppointmentDTO): Promise<Appointment>;
-  findByDate(date: Date): Promise<Appointment | undefined>;
-  findByUserId(
+  findByParams(
     data: IListProfileAppointmentsDTO,
   ): Promise<Appointment[] | undefined>;
+  findByAgendaIds(agendaIds: string[]): Promise<Appointment[]>;
 }

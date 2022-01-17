@@ -1,20 +1,9 @@
-// import { format, parseISO } from 'date-fns';
+import { parseISO } from 'date-fns';
 import { injectable, inject } from 'tsyringe';
 
 import Appointment from '@modules/appointments/infra/typeorm/entities/Appointment';
 import IAppointmentsRepository from '../repositories/IAppointmentsRepository';
-
-interface Request {
-  userId: string;
-  groupId: string;
-  startDate: Date;
-  endDate: Date;
-  appointmentName: string;
-  appointmentDescription: string;
-  status: string;
-  location: string;
-  isPrivate: boolean;
-}
+import ICreateAppointmentDTO from '../dtos/ICreateAppointmentDTO';
 
 @injectable()
 class CreateAppointmentService {
@@ -24,37 +13,38 @@ class CreateAppointmentService {
   ) {}
 
   public async execute({
-    userId,
-    groupId,
+    agendaId,
     startDate,
     endDate,
     appointmentName,
     appointmentDescription,
+    notifyBefore,
+    reccurence,
     status,
     location,
     isPrivate,
-  }: Request): Promise<Appointment> {
-    // const appointmentDate = startOfHour(startDate);
+  }: ICreateAppointmentDTO): Promise<Appointment> {
+    const parsedStartDate = parseISO(String(startDate));
+    const parsedEndDate = endDate ? parseISO(String(endDate)) : null;
 
-    // const hasAppointmentInSameDate = appointmentsRepository.findByDate(
-    //   appointmentDate,
-    // );
-
-    // if (hasAppointmentInSameDate) {
-    //   throw Error('This appointment is already booked');
-    // }
-
-    const appointment = await this.appointmentsRepository.create({
-      userId,
-      groupId,
-      startDate,
+    const data = {
+      agendaId,
+      startDate: parsedStartDate,
       endDate,
       appointmentName,
       appointmentDescription,
+      notifyBefore,
+      reccurence,
       status,
       location,
       isPrivate,
-    });
+    };
+
+    if (parsedEndDate) {
+      data.endDate = parsedEndDate;
+    }
+
+    const appointment = await this.appointmentsRepository.create(data);
 
     return appointment;
   }

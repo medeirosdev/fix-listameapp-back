@@ -5,11 +5,15 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
-import { Exclude, Expose } from 'class-transformer';
+import { Expose } from 'class-transformer';
 
-@Entity('users')
-class User {
+import User from '@modules/users/infra/typeorm/entities/User';
+
+@Entity('agendas')
+class Agenda {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -17,26 +21,20 @@ class User {
   name: string;
 
   @Column()
-  email: string;
-
-  @Column()
-  login: string;
-
-  @Column()
-  bio: string;
+  description: string;
 
   @Column()
   avatar: string;
 
   @Column()
-  @Exclude()
-  password: string;
+  is_private: string;
 
   @Column()
-  status: string;
+  created_by: string;
 
-  @Column()
-  type: string;
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'created_by' })
+  owner: User;
 
   @CreateDateColumn()
   created_at: Date;
@@ -52,4 +50,4 @@ class User {
   }
 }
 
-export default User;
+export default Agenda;
