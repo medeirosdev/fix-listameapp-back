@@ -7,12 +7,14 @@ import UpdateAgendaAvatarService from '@modules/agendas/services/UpdateAgendaAva
 
 export default class AgendasAvatarController {
   public async update(req: Request, res: Response): Promise<Response> {
+    const user_id = req.user.id;
     const { id } = req.params;
 
     const updateAgendaAvatar = container.resolve(UpdateAgendaAvatarService);
 
     const agenda = await updateAgendaAvatar.execute({
-      id,
+      user_id,
+      agendaId: id,
       avatarFileName: req.file.filename,
     });
 

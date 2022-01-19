@@ -1,10 +1,13 @@
 import { Request, Response } from 'express';
 import { isSameDay } from 'date-fns';
 import { container } from 'tsyringe';
+import { DeleteResult } from 'typeorm';
 
 import ListProfileAppointmentsService from '@modules/appointments/services/ListProfileAppointmentsService';
+import DeleteProfileAppointmentsService from '@modules/appointments/services/DeleteProfileAppointmentsService';
 import Appointment from '@modules/appointments/infra/typeorm/entities/Appointment';
 import IListProfileAppointmentsDTO from '@modules/appointments/dtos/IListProfileAppointmentsDTO';
+import IDeleteProfileAppointmentsRequestDTO from '@modules/appointments/dtos/IDeleteProfileAppointmentsRequestDTO';
 
 interface GroupedAppointment {
   date: string | Date;
@@ -76,5 +79,26 @@ export default class ProfileAppointmentsController {
     );
 
     return res.json(groupByDate(appointments));
+  }
+
+  public async delete(req: Request, res: Response): Promise<Response> {
+    const userId = req.user.id;
+    const { appointmentId, reccurrenceId } = req.body;
+
+    const data = {
+      userId,
+      appointmentId,
+      reccurrenceId,
+    } as IDeleteProfileAppointmentsRequestDTO;
+
+    const deleteProfileAppointmentsService = container.resolve(
+      DeleteProfileAppointmentsService,
+    );
+
+    const result: DeleteResult = await deleteProfileAppointmentsService.execute(
+      data,
+    );
+
+    return res.json(result);
   }
 }

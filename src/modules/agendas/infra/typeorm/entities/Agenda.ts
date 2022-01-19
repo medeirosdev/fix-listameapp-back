@@ -32,9 +32,8 @@ class Agenda {
   @Column()
   created_by: string;
 
-  @ManyToOne(() => User)
-  @JoinColumn({ name: 'created_by' })
-  owner: User;
+  @ManyToOne(() => User, user => user.agendas)
+  user: User;
 
   @CreateDateColumn()
   created_at: Date;

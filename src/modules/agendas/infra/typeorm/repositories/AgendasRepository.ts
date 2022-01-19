@@ -1,4 +1,4 @@
-import { getRepository, Repository, In } from 'typeorm';
+import { getRepository, Repository, In, DeleteResult } from 'typeorm';
 
 import IAgendasRepository from '@modules/agendas/repositories/IAgendasRepository';
 import ICreateAgendaDTO from '@modules/agendas/dtos/ICreateAgendaDTO';
@@ -27,6 +27,16 @@ class AgendasRepository implements IAgendasRepository {
     });
 
     return agenda;
+  }
+
+  public async findAll(params: string): Promise<Agenda[] | undefined> {
+    const agenda = await this.ormRepository.find();
+
+    return agenda;
+  }
+
+  public async deleteById(id: string): Promise<DeleteResult> {
+    return this.ormRepository.delete(id);
   }
 
   public async create({

@@ -7,7 +7,8 @@ import IStorageProvider from '@shared/container/providers/StorageProvider/models
 import IAgendasRepository from '../repositories/IAgendasRepository';
 
 interface Request {
-  id: string;
+  user_id: string;
+  agendaId: string;
   avatarFileName: string;
 }
 
@@ -21,24 +22,28 @@ class UpdateAgendaAvatarService {
     private storageProvider: IStorageProvider,
   ) {}
 
-  public async execute({ id, avatarFileName }: Request): Promise<Agenda> {
-    const agenda = await this.agendasRepository.findById(id);
+  public async execute({
+    user_id,
+    agendaId,
+    avatarFileName,
+  }: Request): Promise<Agenda> {
+    const agenda = await this.agendasRepository.findByIds([agendaId]);
 
     if (!agenda) {
       throw new AppError('Agenda does not exist');
     }
 
-    if (agenda.avatar) {
-      await this.storageProvider.deleteFile(agenda.avatar);
+    if (agenda[0].avatar) {
+      await this.storageProvider.deleteFile(agenda[0].avatar);
     }
 
     const fileName = await this.storageProvider.saveFile(avatarFileName);
 
-    agenda.avatar = fileName;
+    agenda[0].avatar = fileName;
 
-    await this.agendasRepository.save(agenda);
+    await this.agendasRepository.save(agenda[0]);
 
-    return agenda;
+    return agenda[0];
   }
 }
 

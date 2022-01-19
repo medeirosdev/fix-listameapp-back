@@ -6,6 +6,7 @@ import {
   MoreThanOrEqual,
   In,
   getConnection,
+  DeleteResult,
 } from 'typeorm';
 import { addDays } from 'date-fns';
 import { uuid } from 'uuidv4';
@@ -13,8 +14,15 @@ import { uuid } from 'uuidv4';
 import IAppointmentsRepository from '@modules/appointments/repositories/IAppointmentsRepository';
 import ICreateAppointmentDTO from '@modules/appointments/dtos/ICreateAppointmentDTO';
 import IListProfileAppointmentsDTO from '@modules/appointments/dtos/IListProfileAppointmentsDTO';
+import IDeleteProfileAppointmentsRequestDTO from '@modules/appointments/dtos/IDeleteProfileAppointmentsRequestDTO';
 import Appointment from '@modules/appointments/infra/typeorm/entities/Appointment';
 import { reccurrenceTypes } from '@modules/appointments/utils/enums';
+
+interface DataToDelete {
+  agendaIds: string[];
+  appointmentId: string;
+  reccurrenceId?: string;
+}
 
 class AppointmentsRepository implements IAppointmentsRepository {
   private ormRepository: Repository<Appointment>;
@@ -57,6 +65,22 @@ class AppointmentsRepository implements IAppointmentsRepository {
     });
 
     return hasAppointments;
+  }
+
+  public async delete(data: DataToDelete): Promise<DeleteResult> {
+    const where = {
+      agenda_id: In(data.agendaIds),
+    };
+
+    if (data.reccurrenceId) {
+      where.reccurent_id = data.reccurrenceId;
+    } else {
+      where.id = data.appointmentId;
+    }
+
+    const appointments = await this.ormRepository.delete(where);
+
+    return appointments;
   }
 
   public async create({

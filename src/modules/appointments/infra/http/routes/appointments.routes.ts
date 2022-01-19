@@ -10,12 +10,8 @@ const profileAppointmentsController = new ProfileAppointmentsController();
 
 appointmentsRouter.use(ensureAuthenticated);
 
-// appointmentsRouter.get('/', async (req, res) => {
-//   const appointments = await appointmentsRepository.find();
-//   return res.json(appointments);
-// });
-
 appointmentsRouter.post('/', appointmentsController.create);
 appointmentsRouter.get('/profile', profileAppointmentsController.index);
+appointmentsRouter.delete('/', profileAppointmentsController.delete);
 
 export default appointmentsRouter;
