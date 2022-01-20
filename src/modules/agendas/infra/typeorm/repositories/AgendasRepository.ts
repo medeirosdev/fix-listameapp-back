@@ -50,6 +50,7 @@ class AgendasRepository implements IAgendasRepository {
       description,
       is_private: isPrivate,
       created_by: createdBy,
+      members: 1,
     });
 
     await this.ormRepository.save(agenda);

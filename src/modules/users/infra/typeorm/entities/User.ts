@@ -5,11 +5,8 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToMany,
 } from 'typeorm';
 import { Exclude, Expose } from 'class-transformer';
-
-import Agenda from '@modules/agendas/infra/typeorm/entities/Agenda';
 
 @Entity('users')
 class User {
@@ -40,9 +37,6 @@ class User {
 
   @Column()
   type: string;
-
-  @OneToMany(() => Agenda, agenda => agenda.user)
-  agendas: Agenda[];
 
   @CreateDateColumn()
   created_at: Date;

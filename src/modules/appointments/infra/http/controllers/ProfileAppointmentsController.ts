@@ -4,6 +4,7 @@ import { container } from 'tsyringe';
 import { DeleteResult } from 'typeorm';
 
 import ListProfileAppointmentsService from '@modules/appointments/services/ListProfileAppointmentsService';
+import UpdateProfileAppointmentsService from '@modules/appointments/services/UpdateProfileAppointmentsService';
 import DeleteProfileAppointmentsService from '@modules/appointments/services/DeleteProfileAppointmentsService';
 import Appointment from '@modules/appointments/infra/typeorm/entities/Appointment';
 import IListProfileAppointmentsDTO from '@modules/appointments/dtos/IListProfileAppointmentsDTO';
@@ -79,6 +80,44 @@ export default class ProfileAppointmentsController {
     );
 
     return res.json(groupByDate(appointments));
+  }
+
+  public async update(req: Request, res: Response): Promise<Response> {
+    const userId = req.user.id;
+    const { id } = req.params;
+    const {
+      startDate,
+      endDate,
+      appointmentName,
+      appointmentDescription,
+      status,
+      location,
+      notifyBefore,
+      isPrivate,
+    } = req.body;
+
+    const data = {
+      userId,
+      id,
+      startDate,
+      endDate,
+      appointmentName,
+      appointmentDescription,
+      status,
+      location,
+      isPrivate,
+      notifyBefore,
+    } as IListProfileAppointmentsDTO;
+
+    const updateProfileAppointmentsService = container.resolve(
+      UpdateProfileAppointmentsService,
+    );
+
+    const appointment: Appointment = await updateProfileAppointmentsService.execute(
+      data,
+    );
+
+    return res.json(appointment);
   }
 
   public async delete(req: Request, res: Response): Promise<Response> {

@@ -5,12 +5,8 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  ManyToOne,
-  JoinColumn,
 } from 'typeorm';
 import { Expose } from 'class-transformer';
-
-import User from '@modules/users/infra/typeorm/entities/User';
 
 @Entity('agendas')
 class Agenda {
@@ -30,10 +26,10 @@ class Agenda {
   is_private: string;
 
   @Column()
-  created_by: string;
+  members: number;
 
-  @ManyToOne(() => User, user => user.agendas)
-  user: User;
+  @Column()
+  created_by: string;
 
   @CreateDateColumn()
   created_at: Date;

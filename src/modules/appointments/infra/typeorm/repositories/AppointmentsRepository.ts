@@ -32,10 +32,12 @@ class AppointmentsRepository implements IAppointmentsRepository {
   }
 
   public async findByParams({
+    agendaIds,
     startDate,
     endDate,
     appointmentName,
     appointmentDescription,
+    reccurrentId,
     status,
     location,
     isPrivate,
@@ -50,6 +52,8 @@ class AppointmentsRepository implements IAppointmentsRepository {
     if (status) where.status = status;
     if (location) where.location = location;
     if (isPrivate) where.is_private = isPrivate;
+    if (agendaIds) where.agenda_id = In(agendaIds);
+    if (reccurrentId) where.reccurrent_id = reccurrentId;
 
     const hasAppointment = await this.ormRepository.find({
       where,
@@ -65,6 +69,19 @@ class AppointmentsRepository implements IAppointmentsRepository {
     });
 
     return hasAppointments;
+  }
+
+  public async findById(agendaIds: string[], id: string): Promise<Appointment> {
+    const appointment = await this.ormRepository.findOne({
+      agenda_id: In(agendaIds),
+      id,
+    });
+
+    if (!appointment) {
+      throw new Error('Appointment not found');
+    }
+
+    return appointment;
   }
 
   public async delete(data: DataToDelete): Promise<DeleteResult> {
