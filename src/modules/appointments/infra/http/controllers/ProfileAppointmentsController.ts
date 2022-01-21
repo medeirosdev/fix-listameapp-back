@@ -124,6 +124,10 @@ export default class ProfileAppointmentsController {
     const userId = req.user.id;
     const { appointmentId, reccurrenceId } = req.body;
 
+    console.log('userId from body', userId);
+    console.log('appointmentId from body', appointmentId);
+    console.log('reccurrenceId from body', reccurrenceId);
+
     const data = {
       userId,
       appointmentId,

@@ -85,6 +85,7 @@ class AppointmentsRepository implements IAppointmentsRepository {
   }
 
   public async delete(data: DataToDelete): Promise<DeleteResult> {
+    console.log('data', data);
     const where = {
       agenda_id: In(data.agendaIds),
     };
@@ -94,6 +95,8 @@ class AppointmentsRepository implements IAppointmentsRepository {
     } else {
       where.id = data.appointmentId;
     }
+
+    console.log('where', where);
 
     const appointments = await this.ormRepository.delete(where);
 
