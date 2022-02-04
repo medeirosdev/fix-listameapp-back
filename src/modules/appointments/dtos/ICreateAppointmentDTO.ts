@@ -5,7 +5,7 @@ export default interface ICreateAppointmentDTO {
   appointmentName: string;
   appointmentDescription?: string;
   notifyBefore?: number;
-  reccurence?: string;
+  recurrence?: string;
   status: string;
   location?: string;
   isPrivate: boolean;

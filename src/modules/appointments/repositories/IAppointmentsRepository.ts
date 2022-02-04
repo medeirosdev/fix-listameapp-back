@@ -12,10 +12,7 @@ interface DataToDelete {
 
 export default interface IAppointmentsRepository {
   create(data: ICreateAppointmentDTO): Promise<Appointment>;
-  findByParams(
-    data: IListProfileAppointmentsDTO,
-  ): Promise<Appointment[] | undefined>;
-  findByAgendaIds(agendaIds: string[]): Promise<Appointment[]>;
+  findByParams(data: IListProfileAppointmentsDTO): Promise<Appointment[]>;
   findById(agendaIds: string[], id: string): Promise<Appointment>;
   delete(data: DataToDelete): Promise<DeleteResult>;
   save(appointment: Appointment): Promise<Appointment>;

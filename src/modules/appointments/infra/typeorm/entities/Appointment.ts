@@ -36,7 +36,7 @@ class Appointment {
   appointment_description: string;
 
   @Column()
-  reccurent_id: string;
+  recurrence_id: string;
 
   @Column()
   notify_before: number;

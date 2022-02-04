@@ -6,6 +6,8 @@ import Agenda from '@modules/agendas/infra/typeorm/entities/Agenda';
 import IStorageProvider from '@shared/container/providers/StorageProvider/models/IStorageProvider';
 import IAgendasRepository from '../repositories/IAgendasRepository';
 
+const agendaAvatarFolder = 'agendas/avatars';
+
 interface Request {
   user_id: string;
   agendaId: string;
@@ -34,10 +36,16 @@ class UpdateAgendaAvatarService {
     }
 
     if (agenda[0].avatar) {
-      await this.storageProvider.deleteFile(agenda[0].avatar);
+      await this.storageProvider.deleteFile(
+        agenda[0].avatar,
+        agendaAvatarFolder,
+      );
     }
 
-    const fileName = await this.storageProvider.saveFile(avatarFileName);
+    const fileName = await this.storageProvider.saveFile(
+      avatarFileName,
+      agendaAvatarFolder,
+    );
 
     agenda[0].avatar = fileName;
 

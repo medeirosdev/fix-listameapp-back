@@ -24,6 +24,20 @@ interface DataToDelete {
   reccurrenceId?: string;
 }
 
+interface WhereParams {
+  id?: string;
+  agenda_id: string;
+  start_date?: Date;
+  end_date?: Date;
+  appointment_name?: string;
+  appointment_description?: string;
+  status?: string;
+  location?: string;
+  recurrence_id?: string;
+  notify_before?: number;
+  is_private?: boolean;
+}
+
 class AppointmentsRepository implements IAppointmentsRepository {
   private ormRepository: Repository<Appointment>;
 
@@ -37,14 +51,18 @@ class AppointmentsRepository implements IAppointmentsRepository {
     endDate,
     appointmentName,
     appointmentDescription,
-    reccurrentId,
+    recurrenceId,
     status,
     location,
     isPrivate,
-  }: IListProfileAppointmentsDTO): Promise<Appointment[] | undefined> {
-    const where = {} as any;
+  }: IListProfileAppointmentsDTO): Promise<Appointment[]> {
+    const where = {
+      agenda_id: In(agendaIds),
+      start_date: startDate
+        ? MoreThanOrEqual(startDate)
+        : MoreThanOrEqual(new Date()),
+    } as WhereParams;
 
-    if (startDate) where.start_date = startDate;
     if (endDate) where.end_date = endDate;
     if (appointmentName) where.appointment_name = appointmentName;
     if (appointmentDescription)
@@ -52,23 +70,13 @@ class AppointmentsRepository implements IAppointmentsRepository {
     if (status) where.status = status;
     if (location) where.location = location;
     if (isPrivate) where.is_private = isPrivate;
-    if (agendaIds) where.agenda_id = In(agendaIds);
-    if (reccurrentId) where.reccurrent_id = reccurrentId;
+    if (recurrenceId) where.recurrence_id = recurrenceId;
 
     const hasAppointment = await this.ormRepository.find({
       where,
     });
 
     return hasAppointment;
-  }
-
-  public async findByAgendaIds(agendaIds: string[]): Promise<Appointment[]> {
-    const hasAppointments = await this.ormRepository.find({
-      agenda_id: In(agendaIds),
-      start_date: MoreThanOrEqual(new Date()),
-    });
-
-    return hasAppointments;
   }
 
   public async findById(agendaIds: string[], id: string): Promise<Appointment> {
@@ -85,18 +93,15 @@ class AppointmentsRepository implements IAppointmentsRepository {
   }
 
   public async delete(data: DataToDelete): Promise<DeleteResult> {
-    console.log('data', data);
     const where = {
       agenda_id: In(data.agendaIds),
-    };
+    } as WhereParams;
 
     if (data.reccurrenceId) {
-      where.reccurent_id = data.reccurrenceId;
+      where.recurrence_id = data.reccurrenceId;
     } else {
       where.id = data.appointmentId;
     }
-
-    console.log('where', where);
 
     const appointments = await this.ormRepository.delete(where);
 
@@ -110,14 +115,14 @@ class AppointmentsRepository implements IAppointmentsRepository {
     appointmentName,
     appointmentDescription,
     notifyBefore,
-    reccurence,
+    recurrence,
     status,
     location,
     isPrivate,
   }: ICreateAppointmentDTO): Promise<Appointment> {
-    if (reccurence) {
+    if (recurrence) {
       const appointments = [];
-      const reccurent_id = await uuid();
+      const recurrence_id = await uuid();
 
       const getReccurrence = reccurrenceType => {
         for (let i = 0; i < reccurrenceType.timesToRepeat; i++) {
@@ -130,14 +135,14 @@ class AppointmentsRepository implements IAppointmentsRepository {
             appointment_name: appointmentName,
             appointment_description: appointmentDescription || null,
             notify_before: notifyBefore || null,
-            reccurent_id,
+            recurrence_id,
             status,
             location: location || null,
             is_private: isPrivate,
           });
         }
       };
-      switch (reccurence) {
+      switch (recurrence) {
         case 'DAILY':
           getReccurrence(reccurrenceTypes.DAILY);
           break;
@@ -167,7 +172,7 @@ class AppointmentsRepository implements IAppointmentsRepository {
       appointment_name: appointmentName,
       appointment_description: appointmentDescription || null,
       notify_before: notifyBefore || null,
-      reccurent_id: null,
+      recurrence_id: null,
       status,
       location: location || null,
       is_private: isPrivate,

@@ -6,6 +6,8 @@ import User from '@modules/users/infra/typeorm/entities/User';
 import IStorageProvider from '@shared/container/providers/StorageProvider/models/IStorageProvider';
 import IUsersRepository from '../repositories/IUsersRepository';
 
+const profileAvatarFolder = 'profiles/avatars';
+
 interface Request {
   user_id: string;
   avatarFileName: string;
@@ -29,10 +31,16 @@ class UpdateProfileAvatarService {
     }
 
     if (profile.avatar) {
-      await this.storageProvider.deleteFile(profile.avatar);
+      await this.storageProvider.deleteFile(
+        profile.avatar,
+        profileAvatarFolder,
+      );
     }
 
-    const fileName = await this.storageProvider.saveFile(avatarFileName);
+    const fileName = await this.storageProvider.saveFile(
+      avatarFileName,
+      profileAvatarFolder,
+    );
 
     profile.avatar = fileName;
 

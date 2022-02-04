@@ -31,14 +31,25 @@ class ListProfileAppointmentsService {
     const userAgenda = await this.usersAgendasRepository.findByUserId(userId);
 
     if (!userAgenda) {
-      throw new AppError('Agenda not found');
+      throw new AppError('Appointment not found');
     }
 
     const agendaIds: string[] = userAgenda.map(item => item.agenda_id);
 
-    const appointment = await this.appointmentsRepository.findByAgendaIds(
-      agendaIds,
-    );
+    if (agendaId && !agendaIds.includes(agendaId)) {
+      throw new AppError('Appointment not found');
+    }
+
+    const appointment = await this.appointmentsRepository.findByParams({
+      agendaIds: agendaId ? [agendaId] : agendaIds,
+      startDate,
+      endDate,
+      appointmentName,
+      appointmentDescription,
+      status,
+      location,
+      isPrivate,
+    });
 
     return appointment;
   }

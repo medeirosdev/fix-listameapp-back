@@ -22,9 +22,6 @@ class DeleteProfileAppointmentsService {
     appointmentId,
     reccurrenceId,
   }: IDeleteProfileAppointmentsRequestDTO): Promise<DeleteResult> {
-    console.log('userId', userId);
-    console.log('appointmentId', appointmentId);
-    console.log('reccurrenceId', reccurrenceId);
     const userAgenda = await this.usersAgendasRepository.findByUserId(userId);
 
     if (!userAgenda) {
