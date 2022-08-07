@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "aws-sdk": "^2.1067.0",
+    "axios": "^0.27.2",
     "bcryptjs": "^2.4.3",
     "class-transformer": "^0.4.0",
     "date-fns": "^2.16.1",
@@ -25,6 +26,7 @@
     "nodemailer": "^6.4.17",
     "pg": "^8.5.1",
     "reflect-metadata": "^0.1.13",
+    "secure-random-password": "^0.2.3",
     "tsyringe": "^4.4.0",
     "typeorm": "^0.2.30",
     "uuidv4": "^6.2.12"
@@ -44,6 +46,7 @@
     "@types/mime": "^2.0.3",
     "@types/multer": "^1.4.5",
     "@types/nodemailer": "^6.4.0",
+    "@types/secure-random-password": "^0.2.1",
     "@typescript-eslint/eslint-plugin": "^4.12.0",
     "@typescript-eslint/parser": "^4.12.0",
     "babel-plugin-module-resolver": "^4.1.0",

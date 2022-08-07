@@ -2,6 +2,7 @@ import { injectable, inject } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
 import User from '@modules/users/infra/typeorm/entities/User';
+import { IUserType } from '@modules/users/dtos/ICreateUserDTO';
 import IUsersRepository from '../repositories/IUsersRepository';
 import IHashProvider from '../providers/HashProvider/models/IHashProvider';
 
@@ -10,6 +11,7 @@ interface Request {
   email: string;
   login: string;
   password: string;
+  type?: IUserType;
 }
 
 @injectable()
@@ -27,6 +29,7 @@ class CreateUserService {
     email,
     login,
     password,
+    type,
   }: Request): Promise<User> {
     const emailExists = await this.usersRepository.findByEmail(email);
 
@@ -48,7 +51,7 @@ class CreateUserService {
       login,
       password: hashedPassword,
       status: 'ACTIVE',
-      type: 'DEFAULT',
+      type: type || 'DEFAULT',
     });
 
     await this.usersRepository.save(user);

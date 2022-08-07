@@ -5,6 +5,7 @@ import 'express-async-errors';
 
 import uploadConfig from '@config/upload';
 import AppError from '@shared/errors/AppError';
+import { AppErrorCodeEnum } from '@shared/errors/AppErrorCodeEnum';
 import routes from './routes';
 
 import '@shared/infra/typeorm';
@@ -19,16 +20,18 @@ app.use(routes);
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   if (err instanceof AppError) {
     return res.status(err.statusCode).json({
-      status: 'error',
+      statusCode: err.statusCode,
       message: err.message,
+      code: err.code,
     });
   }
 
   console.error(err);
 
   return res.status(500).json({
-    status: 'error',
+    statusCode: 500,
     message: 'Internal server error',
+    code: AppErrorCodeEnum.INTERNAL_SERVER_ERROR,
   });
 });
 
