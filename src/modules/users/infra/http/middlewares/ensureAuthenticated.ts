@@ -21,11 +21,10 @@ export default function ensureAuthenticated(
     throw new AppError('Token is missing', 401);
   }
 
-  const token = authHeader.replace('Bearer', '');
+  const token = authHeader.replace('Bearer ', '');
 
   try {
     const decoded = verify(token, authConfig.jwt.secret);
-    console.log('decoded: ', decoded);
 
     const { sub } = decoded as ITokenPayload;
 
@@ -35,7 +34,6 @@ export default function ensureAuthenticated(
 
     return next();
   } catch (err) {
-    console.log('err: ', err);
     throw new AppError('Invalid token', 401);
   }
 }

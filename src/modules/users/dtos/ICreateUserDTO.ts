@@ -7,4 +7,5 @@ export default interface ICreateUserDTO {
   password: string;
   status: string;
   type: IUserType;
+  avatar?: string;
 }

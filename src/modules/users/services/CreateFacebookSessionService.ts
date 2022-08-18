@@ -46,10 +46,11 @@ class CreateFacebookSessionService {
       );
     }
 
-    const { name, email } = facebookUserInfo;
+    const { name, email, picture } = facebookUserInfo;
     let user = await this.usersRepository.findByEmail(email);
 
     if (!user) {
+      const avatar = picture?.data?.is_silhouette ? '' : picture?.data?.url;
       const createUser = container.resolve(CreateUserService);
       user = await createUser.execute({
         name,
@@ -57,6 +58,7 @@ class CreateFacebookSessionService {
         login: email,
         password: randomPassword({ length: 8 }),
         type: 'FACEBOOK',
+        avatar,
       });
     }
 

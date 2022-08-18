@@ -46,9 +46,13 @@ class User {
 
   @Expose({ name: 'avatar_url' })
   getAvatarUrl(): string | null {
-    return this.avatar
-      ? `${process.env.APP_API_URL}/files/profiles/avatars/${this.avatar}`
-      : null;
+    if (this.avatar) {
+      return this.avatar.includes('http')
+        ? this.avatar
+        : `${process.env.APP_API_URL}/files/profiles/avatars/${this.avatar}`;
+    }
+
+    return null;
   }
 }
 

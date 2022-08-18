@@ -45,7 +45,7 @@ class CreateGoogleSessionService {
       );
     }
 
-    const { name, email } = googleUserInfo;
+    const { name, email, picture } = googleUserInfo;
     let user = await this.usersRepository.findByEmail(email);
 
     if (!user) {
@@ -56,6 +56,7 @@ class CreateGoogleSessionService {
         login: email,
         password: randomPassword({ length: 8 }),
         type: 'GOOGLE',
+        avatar: picture,
       });
     }
 

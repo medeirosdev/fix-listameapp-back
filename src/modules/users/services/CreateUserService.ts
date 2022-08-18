@@ -12,6 +12,7 @@ interface Request {
   login: string;
   password: string;
   type?: IUserType;
+  avatar?: string;
 }
 
 @injectable()
@@ -30,6 +31,7 @@ class CreateUserService {
     login,
     password,
     type,
+    avatar,
   }: Request): Promise<User> {
     const emailExists = await this.usersRepository.findByEmail(email);
 
@@ -52,6 +54,7 @@ class CreateUserService {
       password: hashedPassword,
       status: 'ACTIVE',
       type: type || 'DEFAULT',
+      avatar,
     });
 
     await this.usersRepository.save(user);
