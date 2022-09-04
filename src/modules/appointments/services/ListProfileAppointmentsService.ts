@@ -19,7 +19,7 @@ class ListProfileAppointmentsService {
 
   public async execute({
     userId,
-    agendaId,
+    agendaIds,
     startDate,
     endDate,
     appointmentName,
@@ -34,14 +34,17 @@ class ListProfileAppointmentsService {
       throw new AppError('Appointment not found');
     }
 
-    const agendaIds: string[] = userAgenda.map(item => item.agenda_id);
+    const profileAgendaIds: string[] =
+      userAgenda.map(item => item.agenda_id) || [];
 
-    if (agendaId && !agendaIds.includes(agendaId)) {
-      throw new AppError('Appointment not found');
+    let agendaIdsToFind = profileAgendaIds;
+    if (agendaIds) {
+      agendaIdsToFind =
+        typeof agendaIds === 'string' ? JSON.parse(agendaIds) : agendaIds;
     }
 
     const appointment = await this.appointmentsRepository.findByParams({
-      agendaIds: agendaId ? [agendaId] : agendaIds,
+      agendaIds: agendaIdsToFind,
       startDate,
       endDate,
       appointmentName,
@@ -49,6 +52,7 @@ class ListProfileAppointmentsService {
       status,
       location,
       isPrivate,
+      userId,
     });
 
     return appointment;

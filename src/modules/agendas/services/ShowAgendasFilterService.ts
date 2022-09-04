@@ -5,17 +5,17 @@ import Agenda from '@modules/agendas/infra/typeorm/entities/Agenda';
 import IAgendasRepository from '../repositories/IAgendasRepository';
 
 @injectable()
-class ShowAgendaService {
+class ShowAgendasFilterService {
   constructor(
     @inject('AgendasRepository')
     private agendasRepository: IAgendasRepository,
   ) {}
 
-  public async execute(): Promise<Agenda[]> {
-    const agendas = await this.agendasRepository.findAll();
+  public async execute(agendasIds: Agenda['id'][]): Promise<Agenda[]> {
+    const agendas = await this.agendasRepository.findByIds(agendasIds);
 
     return agendas;
   }
 }
 
-export default ShowAgendaService;
+export default ShowAgendasFilterService;

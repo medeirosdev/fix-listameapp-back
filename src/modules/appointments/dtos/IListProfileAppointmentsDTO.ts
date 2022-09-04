@@ -1,6 +1,6 @@
 export default interface IListProfileAppointmentsDTO {
   userId: string;
-  agendaId?: string;
+  agendaIds?: string[];
   startDate?: Date;
   endDate?: Date;
   appointmentName?: string;

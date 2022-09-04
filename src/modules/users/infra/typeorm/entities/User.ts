@@ -5,8 +5,11 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
+  JoinColumn,
 } from 'typeorm';
 import { Exclude, Expose } from 'class-transformer';
+import Agenda from '@modules/agendas/infra/typeorm/entities/Agenda';
 
 @Entity('users')
 class User {

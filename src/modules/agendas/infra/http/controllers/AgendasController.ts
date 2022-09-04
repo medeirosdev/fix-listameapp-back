@@ -8,6 +8,7 @@ import ShowAgendaService from '@modules/agendas/services/ShowAgendaService';
 import ShowAgendaProfileService from '@modules/agendas/services/ShowAgendaProfileService';
 import UpdateAgendaService from '@modules/agendas/services/UpdateAgendaService';
 import DeleteAgendaService from '@modules/agendas/services/DeleteAgendaService';
+import ShowAgendasFilterService from '@modules/agendas/services/ShowAgendasFilterService';
 
 export default class AgendasController {
   public async create(req: Request, res: Response): Promise<Response> {
@@ -27,11 +28,19 @@ export default class AgendasController {
   }
 
   public async index(req: Request, res: Response): Promise<Response> {
-    const { id } = req.user;
-
     const showAgenda = container.resolve(ShowAgendaService);
 
-    const agenda = await showAgenda.execute(id);
+    const agenda = await showAgenda.execute();
+
+    return res.json(classToClass(agenda));
+  }
+
+  public async filter(req: Request, res: Response): Promise<Response> {
+    const { agendasIds } = req.body;
+
+    const showAgendasFilter = container.resolve(ShowAgendasFilterService);
+
+    const agenda = await showAgendasFilter.execute(agendasIds);
 
     return res.json(classToClass(agenda));
   }

@@ -11,14 +11,14 @@ class AgendasRepository implements IAgendasRepository {
     this.ormRepository = getRepository(Agenda);
   }
 
-  public async findByIds(ids: string[]): Promise<Agenda[] | undefined> {
+  public async findByIds(ids: string[]): Promise<Agenda[]> {
     const agenda = await this.ormRepository.find({
       where: {
         id: In(ids),
       },
     });
 
-    return agenda;
+    return agenda || [];
   }
 
   public async findByName(name: string): Promise<Agenda[] | undefined> {
@@ -29,10 +29,12 @@ class AgendasRepository implements IAgendasRepository {
     return agenda;
   }
 
-  public async findAll(params: string): Promise<Agenda[] | undefined> {
-    const agenda = await this.ormRepository.find();
+  public async findAll(): Promise<Agenda[]> {
+    const agenda = await this.ormRepository.find({
+      relations: ['user'],
+    });
 
-    return agenda;
+    return agenda || [];
   }
 
   public async deleteById(id: string): Promise<DeleteResult> {

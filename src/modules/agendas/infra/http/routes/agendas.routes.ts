@@ -17,6 +17,7 @@ agendasRouter.use(ensureAuthenticated);
 agendasRouter.post('/', agendasController.create);
 agendasRouter.get('/', agendasController.index);
 agendasRouter.get('/profile', agendasController.indexProfile);
+agendasRouter.post('/filter', agendasController.filter);
 agendasRouter.put('/:id', agendasController.update);
 agendasRouter.delete('/:id', agendasController.delete);
 

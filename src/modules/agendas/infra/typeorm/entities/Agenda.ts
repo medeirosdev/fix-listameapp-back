@@ -5,8 +5,12 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 import { Expose } from 'class-transformer';
+import User from '@modules/users/infra/typeorm/entities/User';
 
 @Entity('agendas')
 class Agenda {
@@ -36,6 +40,10 @@ class Agenda {
 
   @UpdateDateColumn()
   updated_at: Date;
+
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'created_by' })
+  user: User;
 
   @Expose({ name: 'avatar_url' })
   getAvatarUrl(): string | null {

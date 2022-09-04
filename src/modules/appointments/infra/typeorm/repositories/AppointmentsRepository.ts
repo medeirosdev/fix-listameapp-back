@@ -7,6 +7,7 @@ import {
   In,
   getConnection,
   DeleteResult,
+  LessThanOrEqual,
 } from 'typeorm';
 import { addDays } from 'date-fns';
 import { uuid } from 'uuidv4';
@@ -46,7 +47,7 @@ class AppointmentsRepository implements IAppointmentsRepository {
   }
 
   public async findByParams({
-    agendaIds,
+    agendaIds = [],
     startDate,
     endDate,
     appointmentName,
@@ -56,14 +57,18 @@ class AppointmentsRepository implements IAppointmentsRepository {
     location,
     isPrivate,
   }: IListProfileAppointmentsDTO): Promise<Appointment[]> {
-    const where = {
+    console.table({ startDate, endDate, agendaIds });
+    const where = ({
       agenda_id: In(agendaIds),
       start_date: startDate
-        ? MoreThanOrEqual(startDate)
+        ? MoreThanOrEqual(new Date(startDate))
         : MoreThanOrEqual(new Date()),
-    } as WhereParams;
+    } as unknown) as WhereParams;
 
-    if (endDate) where.end_date = endDate;
+    if (endDate)
+      where.end_date = LessThanOrEqual(
+        new Date(new Date(endDate).setUTCHours(23, 59)),
+      );
     if (appointmentName) where.appointment_name = appointmentName;
     if (appointmentDescription)
       where.appointment_description = appointmentDescription;
@@ -74,6 +79,7 @@ class AppointmentsRepository implements IAppointmentsRepository {
 
     const hasAppointment = await this.ormRepository.find({
       where,
+      relations: ['user'],
     });
 
     return hasAppointment;

@@ -49,7 +49,7 @@ export default class ProfileAppointmentsController {
   public async index(req: Request, res: Response): Promise<Response> {
     const userId = req.user.id;
     const {
-      agendaId,
+      agendaIds,
       startDate,
       endDate,
       appointmentName,
@@ -61,7 +61,7 @@ export default class ProfileAppointmentsController {
 
     const data = {
       userId,
-      agendaId,
+      agendaIds,
       startDate,
       endDate,
       appointmentName,
