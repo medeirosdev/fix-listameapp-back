@@ -14,6 +14,7 @@ export default interface IAppointmentsRepository {
   create(data: ICreateAppointmentDTO): Promise<Appointment>;
   findByParams(data: IListProfileAppointmentsDTO): Promise<Appointment[]>;
   findById(agendaIds: string[], id: string): Promise<Appointment>;
+  findByAgendaId(agendaId: string): Promise<Appointment[]>;
   delete(data: DataToDelete): Promise<DeleteResult>;
   save(appointment: Appointment): Promise<Appointment>;
 }

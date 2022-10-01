@@ -3,6 +3,7 @@ import { injectable, inject } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
 import User from '@modules/users/infra/typeorm/entities/User';
+import { AppErrorCodeEnum } from '@shared/errors/AppErrorCodeEnum';
 import IUsersRepository from '../repositories/IUsersRepository';
 import IHashProvider from '../providers/HashProvider/models/IHashProvider';
 
@@ -58,7 +59,11 @@ class UpdateProfileService {
       );
 
       if (!checkOldPassword) {
-        throw new AppError('Old password does not match.');
+        throw new AppError(
+          'Old password does not match.',
+          403,
+          AppErrorCodeEnum.FORBIDDEN_WRONG_PASSWORD,
+        );
       }
     }
 

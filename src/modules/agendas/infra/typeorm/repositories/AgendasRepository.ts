@@ -16,9 +16,21 @@ class AgendasRepository implements IAgendasRepository {
       where: {
         id: In(ids),
       },
+      relations: ['user'],
     });
 
     return agenda || [];
+  }
+
+  public async findById(id: string): Promise<Agenda | undefined> {
+    const agenda = await this.ormRepository.findOne({
+      where: {
+        id,
+      },
+      relations: ['user'],
+    });
+
+    return agenda;
   }
 
   public async findByName(name: string): Promise<Agenda[] | undefined> {

@@ -4,11 +4,16 @@ import { container } from 'tsyringe';
 import { classToClass } from 'class-transformer';
 
 import CreateAgendaService from '@modules/agendas/services/CreateAgendaService';
-import ShowAgendaService from '@modules/agendas/services/ShowAgendaService';
+import ShowAllAgendaService from '@modules/agendas/services/ShowAllAgendaService';
 import ShowAgendaProfileService from '@modules/agendas/services/ShowAgendaProfileService';
 import UpdateAgendaService from '@modules/agendas/services/UpdateAgendaService';
 import DeleteAgendaService from '@modules/agendas/services/DeleteAgendaService';
 import ShowAgendasFilterService from '@modules/agendas/services/ShowAgendasFilterService';
+import ShowAgendaService from '@modules/agendas/services/ShowAgendaService';
+import FollowAgendaService from '@modules/agendas/services/FollowAgendaService';
+import UnfollowAgendaService from '@modules/agendas/services/UnfollowAgendaService';
+import ShowAgendaFollowersService from '@modules/agendas/services/ShowAgendaFollowersService';
+import ShowUserAgendaRoleService from '@modules/agendas/services/ShowUserAgendaRoleService';
 
 export default class AgendasController {
   public async create(req: Request, res: Response): Promise<Response> {
@@ -27,10 +32,38 @@ export default class AgendasController {
     return res.json(classToClass(agenda));
   }
 
-  public async index(req: Request, res: Response): Promise<Response> {
-    const showAgenda = container.resolve(ShowAgendaService);
+  public async follow(req: Request, res: Response): Promise<Response> {
+    const user_id = req.user.id;
+    const { id: agendaId } = req.params;
 
-    const agenda = await showAgenda.execute();
+    const followAgenda = container.resolve(FollowAgendaService);
+
+    const agenda = await followAgenda.execute({
+      userId: user_id,
+      agendaId,
+    });
+
+    return res.json(classToClass(agenda));
+  }
+
+  public async unfollow(req: Request, res: Response): Promise<Response> {
+    const user_id = req.user.id;
+    const { id: agendaId } = req.params;
+
+    const unfollowAgenda = container.resolve(UnfollowAgendaService);
+
+    const agenda = await unfollowAgenda.execute({
+      userId: user_id,
+      agendaId,
+    });
+
+    return res.json(classToClass(agenda));
+  }
+
+  public async index(req: Request, res: Response): Promise<Response> {
+    const showAllAgenda = container.resolve(ShowAllAgendaService);
+
+    const agenda = await showAllAgenda.execute();
 
     return res.json(classToClass(agenda));
   }
@@ -43,6 +76,38 @@ export default class AgendasController {
     const agenda = await showAgendasFilter.execute(agendasIds);
 
     return res.json(classToClass(agenda));
+  }
+
+  public async show(req: Request, res: Response): Promise<Response> {
+    const { id } = req.params;
+    const userId = req.user.id;
+
+    const showAgenda = container.resolve(ShowAgendaService);
+
+    const agenda = await showAgenda.execute(id);
+
+    const showAgendaUserRole = container.resolve(ShowUserAgendaRoleService);
+    const role = await showAgendaUserRole.execute({
+      agendaId: id,
+      userId,
+    });
+
+    console.log(role, agenda?.user?.name);
+    return res.json(classToClass({ ...agenda, role }));
+  }
+
+  public async showRole(req: Request, res: Response): Promise<Response> {
+    const userId = req.user.id;
+    const { id: agendaId } = req.params;
+
+    const showUserAgendaRole = container.resolve(ShowUserAgendaRoleService);
+
+    const role = await showUserAgendaRole.execute({
+      userId,
+      agendaId,
+    });
+
+    return res.json(classToClass({ role }));
   }
 
   public async indexProfile(req: Request, res: Response): Promise<Response> {
@@ -79,5 +144,15 @@ export default class AgendasController {
     const agenda = await deleteAgenda.execute(id);
 
     return res.json(classToClass(agenda));
+  }
+
+  public async followers(req: Request, res: Response): Promise<Response> {
+    const { id } = req.params;
+
+    const agendaFollowers = container.resolve(ShowAgendaFollowersService);
+
+    const followers = await agendaFollowers.execute(id);
+
+    return res.json(classToClass(followers));
   }
 }

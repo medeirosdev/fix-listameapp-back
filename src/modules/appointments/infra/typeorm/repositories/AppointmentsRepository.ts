@@ -57,7 +57,6 @@ class AppointmentsRepository implements IAppointmentsRepository {
     location,
     isPrivate,
   }: IListProfileAppointmentsDTO): Promise<Appointment[]> {
-    console.table({ startDate, endDate, agendaIds });
     const where = ({
       agenda_id: In(agendaIds),
       start_date: startDate
@@ -89,6 +88,20 @@ class AppointmentsRepository implements IAppointmentsRepository {
     const appointment = await this.ormRepository.findOne({
       agenda_id: In(agendaIds),
       id,
+    });
+
+    if (!appointment) {
+      throw new Error('Appointment not found');
+    }
+
+    return appointment;
+  }
+
+  public async findByAgendaId(agendaId: string): Promise<Appointment[]> {
+    const appointment = await this.ormRepository.find({
+      where: {
+        agenda_id: agendaId,
+      },
     });
 
     if (!appointment) {

@@ -12,6 +12,7 @@ appointmentsRouter.use(ensureAuthenticated);
 
 appointmentsRouter.post('/', appointmentsController.create);
 appointmentsRouter.get('/profile', profileAppointmentsController.index);
+appointmentsRouter.get('/:agendaId', appointmentsController.listByAgenda);
 appointmentsRouter.put('/:id', profileAppointmentsController.update);
 appointmentsRouter.delete('/', profileAppointmentsController.delete);
 

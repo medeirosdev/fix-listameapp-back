@@ -1,6 +1,7 @@
 import { injectable, inject } from 'tsyringe';
 
 import Agenda from '@modules/agendas/infra/typeorm/entities/Agenda';
+import { UserAgendaRole } from '@modules/agendas/infra/typeorm/enums/UserAgendaRoles';
 import IAgendasRepository from '../repositories/IAgendasRepository';
 import IUsersAgendasRepository from '../repositories/IUsersAgendasRepository';
 import ICreateAgendaDTO from '../dtos/ICreateAgendaDTO';
@@ -37,6 +38,7 @@ class CreateAgendaService {
     const userAgenda = await this.usersAgendasRepository.create({
       userId: createdBy,
       agendaId: savedAgenda.id,
+      role: UserAgendaRole.OWNER,
     });
 
     if (!userAgenda) {

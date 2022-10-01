@@ -3,6 +3,7 @@ import path from 'path';
 
 import AppError from '@shared/errors/AppError';
 import IMailProvider from '@shared/container/providers/MailProvider/models/IMailProvider';
+import { AppErrorCodeEnum } from '@shared/errors/AppErrorCodeEnum';
 import IUsersRepository from '../repositories/IUsersRepository';
 import IUserTokensRepository from '../repositories/IUserTokensRepository';
 
@@ -27,7 +28,11 @@ class SendForgotPasswordEmailService {
     const user = await this.usersRepository.findByEmail(email);
 
     if (!user) {
-      throw new AppError('User does not exists.');
+      throw new AppError(
+        'User does not exists.',
+        404,
+        AppErrorCodeEnum.USER_MAIL_NOT_FOUND,
+      );
     }
 
     const { token } = await this.userTokensRepository.generate(user.id);
