@@ -20,6 +20,8 @@ profilesRouter.patch(
   profilesAvatarController.update,
 );
 
+profilesRouter.delete('/avatar', profilesAvatarController.delete);
+
 profilesRouter.put('/', profilesController.update);
 
 profilesRouter.get('/', profilesController.show);
