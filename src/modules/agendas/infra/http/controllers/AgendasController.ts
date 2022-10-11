@@ -92,7 +92,6 @@ export default class AgendasController {
       userId,
     });
 
-    console.log(role, agenda?.user?.name);
     return res.json(classToClass({ ...agenda, role }));
   }
 

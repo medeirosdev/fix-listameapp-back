@@ -37,7 +37,7 @@ class UpdateProfileAppointmentsService {
 
     const agendaIds: string[] = userAgenda.map(item => item.agenda_id);
 
-    const appointment = await this.appointmentsRepository.findById(
+    const appointment = await this.appointmentsRepository.findByAgendaAndId(
       agendaIds,
       id,
     );

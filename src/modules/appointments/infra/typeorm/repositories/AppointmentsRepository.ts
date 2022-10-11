@@ -84,7 +84,16 @@ class AppointmentsRepository implements IAppointmentsRepository {
     return hasAppointment;
   }
 
-  public async findById(agendaIds: string[], id: string): Promise<Appointment> {
+  public async findById(
+    appointmentId: Appointment['id'],
+  ): Promise<Appointment | undefined> {
+    return this.ormRepository.findOne(appointmentId);
+  }
+
+  public async findByAgendaAndId(
+    agendaIds: string[],
+    id: string,
+  ): Promise<Appointment> {
     const appointment = await this.ormRepository.findOne({
       agenda_id: In(agendaIds),
       id,

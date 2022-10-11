@@ -9,6 +9,8 @@ import Appointment from '@modules/appointments/infra/typeorm/entities/Appointmen
 import IListProfileAppointmentsDTO from '@modules/appointments/dtos/IListProfileAppointmentsDTO';
 import IDeleteProfileAppointmentsRequestDTO from '@modules/appointments/dtos/IDeleteProfileAppointmentsRequestDTO';
 import { groupByDate } from '@modules/appointments/utils/groupByDate';
+import { classToClass } from 'class-transformer';
+import ShowAppointmentService from '@modules/appointments/services/ShowAppointmentService';
 
 export default class ProfileAppointmentsController {
   public async index(req: Request, res: Response): Promise<Response> {
@@ -89,10 +91,6 @@ export default class ProfileAppointmentsController {
     const userId = req.user.id;
     const { appointmentId, reccurrenceId } = req.body;
 
-    console.log('userId from body', userId);
-    console.log('appointmentId from body', appointmentId);
-    console.log('reccurrenceId from body', reccurrenceId);
-
     const data = {
       userId,
       appointmentId,
@@ -108,5 +106,15 @@ export default class ProfileAppointmentsController {
     );
 
     return res.json(result);
+  }
+
+  public async show(req: Request, res: Response): Promise<Response> {
+    const { id } = req.params;
+
+    const showAppointment = container.resolve(ShowAppointmentService);
+
+    const agenda = await showAppointment.execute(id);
+
+    return res.json(classToClass(agenda));
   }
 }

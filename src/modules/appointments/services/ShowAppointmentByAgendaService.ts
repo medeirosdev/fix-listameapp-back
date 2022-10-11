@@ -6,23 +6,23 @@ import Appointment from '@modules/appointments/infra/typeorm/entities/Appointmen
 import IAppointmentsRepository from '../repositories/IAppointmentsRepository';
 
 @injectable()
-class ShowAppointmentService {
+class ShowAppointmentByAgendaService {
   constructor(
     @inject('AppointmentsRepository')
     private appointmentsRepository: IAppointmentsRepository,
   ) {}
 
-  public async execute(appointmentId: string): Promise<Appointment> {
-    const appointment = await this.appointmentsRepository.findById(
-      appointmentId,
+  public async execute(agendaId: string): Promise<Appointment[]> {
+    const appointments = await this.appointmentsRepository.findByAgendaId(
+      agendaId,
     );
 
-    if (!appointment) {
-      throw new AppError('Appointment not found', 404);
+    if (!appointments) {
+      throw new AppError('Appointments not found');
     }
 
-    return appointment;
+    return appointments;
   }
 }
 
-export default ShowAppointmentService;
+export default ShowAppointmentByAgendaService;
