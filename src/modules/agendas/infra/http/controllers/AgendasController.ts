@@ -136,11 +136,12 @@ export default class AgendasController {
   }
 
   public async delete(req: Request, res: Response): Promise<Response> {
-    const { id } = req.body;
+    const userId = req.user.id;
+    const { id } = req.query;
 
     const deleteAgenda = container.resolve(DeleteAgendaService);
 
-    const agenda = await deleteAgenda.execute(id);
+    const agenda = await deleteAgenda.execute(String(id), userId);
 
     return res.json(classToClass(agenda));
   }

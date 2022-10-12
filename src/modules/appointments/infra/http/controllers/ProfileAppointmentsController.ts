@@ -89,7 +89,7 @@ export default class ProfileAppointmentsController {
 
   public async delete(req: Request, res: Response): Promise<Response> {
     const userId = req.user.id;
-    const { appointmentId, reccurrenceId } = req.body;
+    const { appointmentId, reccurrenceId } = req.query;
 
     const data = {
       userId,

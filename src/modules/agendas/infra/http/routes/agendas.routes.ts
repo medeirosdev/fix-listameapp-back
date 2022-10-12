@@ -46,7 +46,7 @@ agendasRouter.get('/role/:id', agendasController.showRole);
 agendasRouter.post('/filter', agendasController.filter);
 agendasRouter.put('/:id', agendasController.update);
 agendasRouter.delete(
-  '/:id',
+  '/',
   (req, res, next) =>
     userRoleMiddleware.valid(req, res, next, [
       UserAgendaRole.OWNER,

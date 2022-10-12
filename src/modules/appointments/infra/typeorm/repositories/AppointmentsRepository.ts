@@ -59,10 +59,11 @@ class AppointmentsRepository implements IAppointmentsRepository {
   }: IListProfileAppointmentsDTO): Promise<Appointment[]> {
     const where = ({
       agenda_id: In(agendaIds),
-      start_date: startDate
-        ? MoreThanOrEqual(new Date(startDate))
-        : MoreThanOrEqual(new Date()),
     } as unknown) as WhereParams;
+
+    if (startDate) {
+      where.start_date = MoreThanOrEqual(new Date(startDate));
+    }
 
     if (endDate)
       where.end_date = LessThanOrEqual(
