@@ -92,7 +92,7 @@ export default class AgendasController {
       userId,
     });
 
-    return res.json(classToClass({ ...agenda, role }));
+    return res.json({ ...classToClass(agenda), role });
   }
 
   public async showRole(req: Request, res: Response): Promise<Response> {
@@ -106,7 +106,7 @@ export default class AgendasController {
       agendaId,
     });
 
-    return res.json(classToClass({ role }));
+    return res.json({ role });
   }
 
   public async indexProfile(req: Request, res: Response): Promise<Response> {

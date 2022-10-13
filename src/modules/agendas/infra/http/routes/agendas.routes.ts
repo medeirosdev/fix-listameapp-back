@@ -55,6 +55,8 @@ agendasRouter.delete(
   agendasController.delete,
 );
 
+agendasRouter.delete('/avatar/:id', agendasAvatarController.delete);
+
 agendasRouter.patch(
   '/avatar/:id',
   upload.single('avatar'),

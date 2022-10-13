@@ -8,7 +8,6 @@ import DeleteProfileAvatarService from '@modules/users/services/DeleteProfileAva
 
 export default class ProfilesAvatarController {
   public async update(req: Request, res: Response): Promise<Response> {
-    console.log('update', req?.file);
     const user_id = req.user.id;
 
     const updateProfileAvatar = container.resolve(UpdateProfileAvatarService);
