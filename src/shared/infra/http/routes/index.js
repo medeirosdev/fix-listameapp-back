@@ -1,0 +1,17 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var express_1 = require("express");
+var appointments_routes_1 = require("../../../../modules/appointments/infra/http/routes/appointments.routes");
+var users_routes_1 = require("../../../../modules/users/infra/http/routes/users.routes");
+var sessions_routes_1 = require("../../../../modules/users/infra/http/routes/sessions.routes");
+var password_routes_1 = require("../../../../modules/users/infra/http/routes/password.routes");
+var profiles_routes_1 = require("../../../../modules/users/infra/http/routes/profiles.routes");
+var agendas_routes_1 = require("../../../../modules/agendas/infra/http/routes/agendas.routes");
+var routes = (0, express_1.Router)();
+routes.use('/appointments', appointments_routes_1.default);
+routes.use('/users', users_routes_1.default);
+routes.use('/sessions', sessions_routes_1.default);
+routes.use('/password', password_routes_1.default);
+routes.use('/profiles', profiles_routes_1.default);
+routes.use('/agendas', agendas_routes_1.default);
+exports.default = routes;

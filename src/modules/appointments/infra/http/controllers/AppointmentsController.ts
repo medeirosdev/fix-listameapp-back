@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
@@ -7,11 +8,12 @@ import { groupByDate } from '@modules/appointments/utils/groupByDate';
 
 export default class AppointmentsController {
   public async create(req: Request, res: Response): Promise<Response> {
+    console.log('A');
     const createAppointment = container.resolve(CreateAppointmentService);
-
+    console.log('b');
     const appointment = await createAppointment.execute(req.body);
-
-    return res.json(appointment);
+    console.log('c');
+    return res.status(201).json(appointment);
   }
 
   public async listByAgenda(req: Request, res: Response): Promise<Response> {

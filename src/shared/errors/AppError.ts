@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-unresolved
 import { AppErrorCodeEnum } from '@shared/errors/AppErrorCodeEnum';
 
 class AppError {

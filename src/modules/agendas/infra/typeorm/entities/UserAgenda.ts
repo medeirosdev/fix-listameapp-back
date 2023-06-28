@@ -43,6 +43,6 @@ class UserAgenda {
 
   @UpdateDateColumn()
   updated_at: Date;
-}
+} 
 
 export default UserAgenda;

@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 import { container } from 'tsyringe';
 
 import '@modules/users/providers';

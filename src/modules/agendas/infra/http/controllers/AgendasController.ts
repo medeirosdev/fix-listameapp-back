@@ -18,10 +18,11 @@ import ShowUserAgendaRoleService from '@modules/agendas/services/ShowUserAgendaR
 export default class AgendasController {
   public async create(req: Request, res: Response): Promise<Response> {
     const user_id = req.user.id;
-    const { name, description, isPrivate } = req.body;
-
+    const { name, description } = req.body;
+    const isPrivate = req.body.is_Private;
+    console.log(name, description, isPrivate);
     const createAgenda = container.resolve(CreateAgendaService);
-
+    console.log(createAgenda);
     const agenda = await createAgenda.execute({
       name,
       description,
@@ -29,7 +30,7 @@ export default class AgendasController {
       isPrivate,
     });
 
-    return res.json(classToClass(agenda));
+    return res.json(agenda.is_private);
   }
 
   public async follow(req: Request, res: Response): Promise<Response> {
@@ -45,6 +46,7 @@ export default class AgendasController {
 
     return res.json(classToClass(agenda));
   }
+
 
   public async unfollow(req: Request, res: Response): Promise<Response> {
     const user_id = req.user.id;
@@ -65,7 +67,7 @@ export default class AgendasController {
 
     const agenda = await showAllAgenda.execute();
 
-    return res.json(classToClass(agenda));
+    return res.json(agenda);
   }
 
   public async filter(req: Request, res: Response): Promise<Response> {

@@ -10,7 +10,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=docker
-      - POSTGRES_DB=agenda
+      - POSTGRES_DB=agenda 
     volumes:
       - pgdata:/data/postgres
 

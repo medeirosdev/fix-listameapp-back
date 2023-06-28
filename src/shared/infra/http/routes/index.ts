@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import appointmentsRouter from '@modules/appointments/infra/http/routes/appointments.routes';
-import usersRouter from '@modules/users/infra/http/routes/users.routes';
-import sessionsRouter from '@modules/users/infra/http/routes/sessions.routes';
-import passwordRouter from '@modules/users/infra/http/routes/password.routes';
-import profilesRouter from '@modules/users/infra/http/routes/profiles.routes';
-import agendasRouter from '@modules/agendas/infra/http/routes/agendas.routes';
+import appointmentsRouter from '../../../../modules/appointments/infra/http/routes/appointments.routes';
+import usersRouter from '../../../../modules/users/infra/http/routes/users.routes';
+import sessionsRouter from '../../../../modules/users/infra/http/routes/sessions.routes';
+import passwordRouter from '../../../../modules/users/infra/http/routes/password.routes';
+import profilesRouter from '../../../../modules/users/infra/http/routes/profiles.routes';
+import agendasRouter from '../../../../modules/agendas/infra/http/routes/agendas.routes';
 
 const routes = Router();
 

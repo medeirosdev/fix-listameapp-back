@@ -17,8 +17,8 @@ const userRoleMiddleware = new UserRoleMiddleware();
 
 agendasRouter.use(ensureAuthenticated);
 
-agendasRouter.post('/', agendasController.create);
-agendasRouter.get('/', agendasController.index);
+agendasRouter.post('/create', agendasController.create);
+agendasRouter.get('/index', agendasController.index);
 agendasRouter.get('/profile', agendasController.indexProfile);
 agendasRouter.post(
   '/follow/:id',

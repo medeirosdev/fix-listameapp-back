@@ -18,7 +18,7 @@ export default class SessionsController {
       password,
     });
 
-    return res.json({ user: classToClass(user), token });
+    return res.json({ token });
   }
 
   public async isValid(

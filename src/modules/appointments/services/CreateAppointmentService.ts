@@ -24,9 +24,10 @@ class CreateAppointmentService {
     location,
     isPrivate,
   }: ICreateAppointmentDTO): Promise<Appointment> {
+    console.log("1")
     const parsedStartDate = parseISO(String(startDate));
     const parsedEndDate = endDate ? parseISO(String(endDate)) : null;
-
+    console.log("2")
     const data = {
       agendaId,
       startDate: parsedStartDate,
@@ -43,9 +44,9 @@ class CreateAppointmentService {
     if (parsedEndDate) {
       data.endDate = parsedEndDate;
     }
-
+    console.log("3")
     const appointment = await this.appointmentsRepository.create(data);
-
+    console.log(data);
     return appointment;
   }
 }
