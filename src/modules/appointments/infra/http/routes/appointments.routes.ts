@@ -11,7 +11,7 @@ const profileAppointmentsController = new ProfileAppointmentsController();
 
 appointmentsRouter.use(ensureAuthenticated);
 
-appointmentsRouter.post('/create', appointmentsController.create);
+appointmentsRouter.post('/', appointmentsController.create);
 appointmentsRouter.get('/profile', profileAppointmentsController.index);
 appointmentsRouter.get('/profile/:id', profileAppointmentsController.show);
 appointmentsRouter.get('/:agendaId', appointmentsController.listByAgenda);
